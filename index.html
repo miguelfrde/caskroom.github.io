@@ -23,8 +23,8 @@
         <div class="summary delta">
             <p>Homebrew Cask extends <a href="http://brew.sh">Homebrew</a> and brings its elegance, simplicity, and speed to OS X applications and large binaries alike.</p>
             <p>It only takes <span class="cyan">1 line</span> in your shell
-            to reach <span class="n-cask cyan">1105 Casks</span>
-            contributed by over <span class="n-contrib cyan">400 people</span>.</p>
+            to reach <span class="n-cask cyan"><span id="casks">1050</span> Casks</span>
+            contributed by <span class="n-contrib cyan"><span id="contributors">400</span> people</span>.</p>
         </div>
     </div>
 
@@ -106,6 +106,29 @@
             Website courtesy of <a href="https://github.com/ndr-qef">@ndr-qef</a>.
         </div>
     </footer>
+
+    <script>
+        function request(url, spanId) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState != 4 || xmlhttp.status != 200) return;
+                var span = document.getElementById(spanId);
+                var n = JSON.parse(xmlhttp.responseText).length;
+                var i = parseInt(span.innerHTML, 10);
+                setInterval(function() {
+                    if (i <= n) span.innerHTML = i.toString();
+                    i++;
+                }, 50);
+            };
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+        }
+
+        request("https://api.github.com/repos/phinze/homebrew-cask/contents/Casks",
+                "casks");
+        request("https://api.github.com/repos/phinze/homebrew-cask/contributors",
+                "contributors");
+    </script>
 
 </body>
 </html>
