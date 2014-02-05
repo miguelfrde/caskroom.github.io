@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Homebrew Cask</title>
     <link rel="stylesheet" href="cask.css">
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="//use.typekit.net/ghx0nzu.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 </head>
@@ -109,23 +110,20 @@
 
     <script>
         function request(url, spanId) {
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState != 4 || xmlhttp.status != 200) return;
-                var span = document.getElementById(spanId);
-                var n = JSON.parse(xmlhttp.responseText).length;
-                var i = parseInt(span.innerHTML, 10);
-                setInterval(function() {
-                    if (i <= n) span.innerHTML = i.toString();
-                    i++;
-                }, 50);
-            };
-            xmlhttp.open("GET", url, true);
-            xmlhttp.send();
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function(data) {
+                    $('#' + spanId).fadeOut(250, function() {
+                        $(this).text(data.length.toString()).fadeIn(250);
+                    });
+                }
+            });
         }
 
         request("https://api.github.com/repos/phinze/homebrew-cask/contents/Casks",
                 "casks");
+        
         request("https://api.github.com/repos/phinze/homebrew-cask/contributors",
                 "contributors");
     </script>
